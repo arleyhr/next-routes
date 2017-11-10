@@ -16,18 +16,19 @@ class Routes {
     this.Router = this.getRouter(Router)
   }
 
-  add (name, pattern, page) {
+  add (name, pattern, page, pathToRegexpOptions) {
     let options
     if (name instanceof Object) {
       options = name
       name = options.name
+      pathToRegexpOptions = options.pathToRegexpOptions
     } else {
       if (name[0] === '/') {
         page = pattern
         pattern = name
         name = null
       }
-      options = {name, pattern, page}
+      options = {name, pattern, page, pathToRegexpOptions}
     }
 
     if (this.findByName(name)) {
@@ -115,7 +116,7 @@ class Routes {
 }
 
 class Route {
-  constructor ({name, pattern, page = name}) {
+  constructor ({name, pattern, page = name, pathToRegexpOptions = {}}) {
     if (!name && !page) {
       throw new Error(`Missing page to render for route "${pattern}"`)
     }
@@ -123,7 +124,7 @@ class Route {
     this.name = name
     this.pattern = pattern || `/${name}`
     this.page = page.replace(/(^|\/)index$/, '').replace(/^\/?/, '/')
-    this.regex = pathToRegexp(this.pattern, this.keys = [])
+    this.regex = pathToRegexp(this.pattern, this.keys = [], pathToRegexpOptions)
     this.keyNames = this.keys.map(key => key.name)
     this.toPath = pathToRegexp.compile(this.pattern)
   }

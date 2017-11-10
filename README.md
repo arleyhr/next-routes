@@ -26,7 +26,8 @@ routes
 .add('blog', '/blog/:slug')
 .add('user', '/user/:id', 'profile')
 .add('/:noname/:lang(en|es)/:wow+', 'complex')
-.add({name: 'beta', pattern: '/v3', page: 'v3'})
+.add('/:noname/:lang(en|es)/:wow+', 'complex', { strict: true })
+.add({name: 'beta', pattern: '/v3', page: 'v3', pathToRegexpOptions: { strict: true }})
 ```
 
 This file is used both on the server and the client.
@@ -42,6 +43,7 @@ Arguments:
 - `name` - Route name
 - `pattern` - Route pattern (like express, see [path-to-regexp](https://github.com/pillarjs/path-to-regexp))
 - `page` - Page inside `./pages` to be rendered
+- `pathToRegexpOptions` - Options for  [path-to-regexp](https://github.com/pillarjs/path-to-regexp)
 
 The page component receives the matched URL parameters merged into `query`
 
